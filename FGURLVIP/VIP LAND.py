@@ -8,9 +8,10 @@ import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-app = Flask(__name__)
-# Securely allows all network traffic from Netlify or any public browser link
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+if __name__ == "__main__":
+    # This reads the port assigned by Render, or defaults to 5000 locally
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
 
 DATABASE_FILE = "database.db"
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024 

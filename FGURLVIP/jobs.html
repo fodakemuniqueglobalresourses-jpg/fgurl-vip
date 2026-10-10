@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Print Services | FGURL VIP</title>
+    <link rel="stylesheet" href="VIP LAND.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h2>FGURL VIP Hub</h2>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="#" class="active">Jobs</a></li>
+            <li><a href="dashboard.html">My Transact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 20px; font-size: 24px; color: #1a202c;">Premium Printing Services</h1>
+        <div class="jobs-grid">
+            
+            <!-- STICKERS & LABELS PRODUCTION CARD (SECTION 6) -->
+            <div class="job-card">
+                <h3>Stickers & Labels Production</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;">Premium area calculation computed at ₦250 per square foot.</p>
+                <div class="row-inputs">
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Width (Feet)</label>
+                        <input type="number" id="stickWidth" value="4" min="1" class="input-field">
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Height (Feet)</label>
+                        <input type="number" id="stickHeight" value="2" min="1" class="input-field">
+                    </div>
+                </div>
+                <label style="font-size:14px; display:block; font-weight:600;">Production Urgency Tier</label>
+                <select id="stickUrgency" class="input-field">
+                    <option value="0.25">VIP Surcharge Processing (Add 25% Surcharge Fee)</option>
+                    <option value="0.00">Standard Timeline Processing (No Extra Charge)</option>
+                </select>
+                <button class="btn" onclick="calculateStickerPrice()">Compute Production Cost</button>
+                <div id="stickerOutput" style="margin-top:15px; font-weight:bold;"></div>
+            </div>
+
+            <!-- BANNERS & FLEX PRODUCTION CARD -->
+            <div class="job-card">
+                <h3>Banner & Flex Printing</h3>
+                <div class="row-inputs">
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Width (Feet)</label>
+                        <input type="number" id="flexWidth" value="2" min="1" class="input-field">
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Height (Feet)</label>
+                        <input type="number" id="flexHeight" value="2" min="1" class="input-field">
+                    </div>
+                </div>
+                <label style="font-size:14px; display:block; font-weight:600;">Customer Account Category</label>
+                <select id="isPrinter" class="input-field">
+                    <option value="200">Professional Printer Tier (₦200 / sqft)</option>
+                    <option value="500">Standard VIP Client Tier (₦500 / sqft)</option>
+                    <option value="600">Walk-In / Direct Customer (₦600 / sqft)</option>
+                </select>
+                <button class="btn" onclick="calculateFlexPrice()">Compute Flex Cost</button>
+                <div id="flexOutput" style="margin-top:15px; font-weight:bold;"></div>
+            </div>
+
+            <div class="job-card" style="border: 2px dashed var(--border-color); text-align:center;">
+                <h3>Specialized Manual Services</h3>
+                <p style="color:var(--text-muted); font-size:14px;">For Lamination, Plotting, or direct assistance, call customer care:</p>
+                <a href="tel:08065867966" class="btn" style="margin-top:15px; display:block; text-decoration:none; background:#2d3748; text-align:center;">📞 Support Desk: 08065867966</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function routeToCheckout(jobType, actualPrice, surchargeRate) {
+            localStorage.setItem('checkout_job', jobType);
+            localStorage.setItem('checkout_actual_price', actualPrice);
+            localStorage.setItem('checkout_surcharge_rate', surchargeRate);
+            window.location.href = 'payment.html';
+        }
+
+        function calculateStickerPrice() {
+            const w = parseFloat(document.getElementById('stickWidth').value || 0);
+            const h = parseFloat(document.getElementById('stickHeight').value || 0);
+            const surchargeRate = parseFloat(document.getElementById('stickUrgency').value);
+            
+            const baseCost = w * h * 250; 
+            const vipCharge = baseCost * surchargeRate;
+            const total = baseCost + vipCharge;
+
+            document.getElementById('stickerOutput').innerHTML = `
+                <div style="background:#f7fafc; padding:12px; border-radius:8px; font-size:14px; margin-bottom:10px; border:1px solid #e2e8f0;">
+                    Base Price: ₦${baseCost.toLocaleString()}<br>
+                    FGURL VIP Urgency Charge: ₦${vipCharge.toLocaleString()}<br>
+                    <strong>Total Payable: ₦${total.toLocaleString()}</strong>
+                </div>
+                <button class="btn" style="background:green;" onclick="routeToCheckout('Sticker Job (${w}x${h} ft)', ${baseCost}, ${surchargeRate})">Proceed to Payment Gateway</button>
+            `;
+        }
+
+        function calculateFlexPrice() {
+            const w = parseInt(document.getElementById('flexWidth').value || 0);
+            const h = parseInt(document.getElementById('flexHeight').value || 0);
+            const rate = parseInt(document.getElementById('isPrinter').value);
+            const baseCost = (w * h) * rate;
+
+            document.getElementById('flexOutput').innerHTML = `
+                <div style="background:#f7fafc; padding:12px; border-radius:8px; font-size:14px; margin-bottom:10px; border:1px solid #e2e8f0;">
+                    Calculated Base Price: ₦${baseCost.toLocaleString()}
+                </div>
+                <button class="btn" style="background:green;" onclick="routeToCheckout('Flex Banner (${w}x${h} ft)', ${baseCost}, 0.25)">Proceed to Payment Gateway</button>
+            `;
+        }
+    </script>
+</body>
+</html>
